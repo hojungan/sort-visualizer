@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    .controls {
+      /* height: 10vh; */
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      padding: 20px 15px;
+      /* overflow: hidden; */
+    }
+
+    .controls button {
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+      font-weight: bold;
+      font-size: 18px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .controls button#reset {
+      background: orange;
+      color: crimson;
+    }
+
+    .controls button:hover {
+      background: #777;
+      color: #fff;
+    }
+
+    .controls button[disabled] {
+      cursor: not-allowed;
+    }
+
+    #bars {
+      background: turquoise;
+      /* width: 100vw; */
+      /* height: 90vh; */
+      display: flex;
+      align-items: flex-end;
+      /* overflow: hidden; */
+      padding: 15px;
+    }
+
+    .bar {
+      flex: 1;
+      height: calc(90vh - 10vh);
+      background: pink;
+      /* margin: 0 1px; */
+      border-top-left-radius: 50px;
+      border-top-right-radius: 50px;
+    }
+
+    .time {
+      text-align: center;
+      font-weight: bolder;
+      font-size: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="controls">
+    <button class="resetBtn" id="reset" onclick="resetArray()">Reset Array</button>
+    <button class="btn" id="bubble" onclick="runBubble()">Bubble Sort</button>
+    <button class="btn" disabled onclick="">Selection Sort</button>
+    <button class="btn" disabled onclick="">Heap Sort</button>
+    <button class="btn" id="merge" onclick="runMergeSort()">Merge Sort</button>
+    <button class="btn" disabled onclick="">Count Sort</button>
+    <button class="btn" disabled onclick="">Radix Sort</button>
+  </div>
+
+  <div id="bars"></div>
+
+  <script src="main.js"></script>
+</body>
+
+</html>
