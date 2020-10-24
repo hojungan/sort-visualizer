@@ -9,21 +9,16 @@ function disableBtns () {
 }
 
 function resetBtns () {
-  buttons.forEach( btn => btn.hasAttribute( 'disabled' ) ? btn.disabled = true : btn.disabled = false )
+  buttons.forEach( btn => btn.hasAttribute( 'id' ) ? btn.disabled = false : btn.disabled = true )
 }
 
 function resetArray () {
   for ( let i = 0; i < 365; i++ ) {
     numbers[i] = Math.floor( Math.random() * ( 800 - 10 ) + 10 )
   }
-
   drawBars( numbers, box )
-
   resetBtns()
 }
-
-resetArray()
-
 
 function drawBars ( array, box ) {
   box.innerHTML = ""
@@ -36,8 +31,9 @@ function drawBars ( array, box ) {
   bars = document.querySelectorAll( ".bar" )
 }
 
-drawBars( numbers, box )
 
+
+resetArray()
 
 // Merge Sort
 // https://github.com/clementmihailescu/Sorting-Visualizer-Tutorial
@@ -49,42 +45,24 @@ function merge ( mainArray, left, right, middle, auxArray, animations ) {
 
   while ( i <= middle && j <= right ) {
     animations.push( [i, j] );
-    // These are the values that we're comparing; we push them a second
-    // time to revert their color.
     animations.push( [i, j] );
     if ( auxArray[i] <= auxArray[j] ) {
-      // We overwrite the value at index k in the original array with the
-      // value at index i in the auxiliary array.
       animations.push( [k, auxArray[i]] );
       mainArray[k++] = auxArray[i++];
     } else {
-      // We overwrite the value at index k in the original array with the
-      // value at index j in the auxiliary array.
       animations.push( [k, auxArray[j]] );
       mainArray[k++] = auxArray[j++];
     }
   }
   while ( i <= middle ) {
-    // These are the values that we're comparing; we push them once
-    // to change their color.
     animations.push( [i, i] );
-    // These are the values that we're comparing; we push them a second
-    // time to revert their color.
     animations.push( [i, i] );
-    // We overwrite the value at index k in the original array with the
-    // value at index i in the auxiliary array.
     animations.push( [k, auxArray[i]] );
     mainArray[k++] = auxArray[i++];
   }
   while ( j <= right ) {
-    // These are the values that we're comparing; we push them once
-    // to change their color.
     animations.push( [j, j] );
-    // These are the values that we're comparing; we push them a second
-    // time to revert their color.
     animations.push( [j, j] );
-    // We overwrite the value at index k in the original array with the
-    // value at index j in the auxiliary array.
     animations.push( [k, auxArray[j]] );
     mainArray[k++] = auxArray[j++];
   }
@@ -104,7 +82,7 @@ function mergeSort ( mainArray, left, right, auxArray, animations ) {
 
 
 function runMergeSort () {
-  console.log( 'before:', numbers )
+  disableBtns()
 
   let animations = []
   const auxArray = numbers.slice()
