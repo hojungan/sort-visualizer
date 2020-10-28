@@ -2,18 +2,22 @@ let numbers = [];
 const box = document.querySelector( "#bars" )
 const buttons = document.querySelectorAll( '.btn' )
 let bars = document.querySelectorAll( ".bar" )
+let sortAnimationInterval
 
-
+// Disables all sort buttons
 function disableBtns () {
   buttons.forEach( btn => btn.disabled = true )
 }
 
+// re-enable buttons for the sort algorithm that is ready
 function resetBtns () {
   buttons.forEach( btn => btn.hasAttribute( 'id' ) ? btn.disabled = false : btn.disabled = true )
 }
 
+// recreate and re-draw bars
 function resetArray () {
-  for ( let i = 0; i < 365; i++ ) {
+  clearInterval( sortAnimationInterval )
+  for ( let i = 0; i < 320; i++ ) {
     numbers[i] = Math.floor( Math.random() * ( 800 - 10 ) + 10 )
   }
   drawBars( numbers, box )
@@ -31,9 +35,81 @@ function drawBars ( array, box ) {
   bars = document.querySelectorAll( ".bar" )
 }
 
-
-
 resetArray()
+
+/*================================================================================================*/
+
+/* SORTING ALGORITHM ANIMATIONS */
+
+// Selection Sort
+function selectionSort ( arr, animations ) {
+  // loop through the array
+  for ( let i = 0; i < arr.length; i++ ) {
+    let j = i + 1
+
+    // go backwards until j is higher than j-1
+    while ( j > 0 && arr[j] <= arr[j - 1] ) {
+      // push two elements being swapped [index, j-1], [index, j]
+      // push to change color
+      animations.push( [[j - 1, arr[j - 1]], [j, arr[j]]] )
+
+      // push again to revert the color
+      animations.push( [[j - 1, arr[j - 1]], [j, arr[j]]] )
+
+      // swap j and j-1
+      let temp = arr[j]
+      arr[j] = arr[j - 1]
+      arr[j - 1] = temp
+      --j
+    }
+  }
+}
+
+function runSelection () {
+  disableBtns()
+  let animations = []
+  selectionSort( numbers, animations )
+
+  console.log( animations )
+
+  // animate
+  let indx = 0
+  sortAnimationInterval = setInterval( () => {
+    let [currentIndex, currentValue] = animations[indx][1]
+    let [previousIndex, previousValue] = animations[indx][0]
+
+    // we change the color of the bar
+    let doChangeColor = indx % 2 === 0
+
+    if ( doChangeColor ) {
+      setTimeout( () => {
+        bars[currentIndex].style.background = 'crimson'
+        // bars[previousIndex].style.background = 'orange'
+      } )
+    } else {
+      bars[currentIndex].style.height = `${previousValue}px`
+      bars[previousIndex].style.height = `${currentValue}px`
+
+      // bars[currentIndex].style.background = 'orange'
+      // bars[previousIndex].style.background = 'green'
+
+      setTimeout( () => {
+        bars[currentIndex].style.background = 'pink'
+        bars[previousIndex].style.background = 'pink'
+      } )
+    }
+
+    ++indx
+
+    if ( indx === animations.length ) {
+      clearInterval( sortAnimationInterval )
+    }
+
+  } )
+
+}
+
+
 
 // Merge Sort
 // https://github.com/clementmihailescu/Sorting-Visualizer-Tutorial
@@ -95,7 +171,7 @@ function runMergeSort () {
       const [barOneIdx, barTwoIdx] = animations[i];
       const barOneStyle = bars[barOneIdx].style;
       const barTwoStyle = bars[barTwoIdx].style;
-      const color = i % 3 === 0 ? 'orange' : 'pink';
+      const color = i % 3 === 0 ? 'crimson' : 'green';
       setTimeout( () => {
         barOneStyle.backgroundColor = color;
         barTwoStyle.backgroundColor = color;
@@ -116,7 +192,7 @@ function runBubble () {
 
   disableBtns()
 
-  let interval = setInterval( () => {
+  sortAnimationInterval = setInterval( () => {
     console.log( 'interval started' )
     if ( pt1 <= numbers.length ) {
       if ( pt2 <= numbers.length - pt1 - 1 ) {
@@ -150,7 +226,7 @@ function runBubble () {
     }
 
     if ( pt1 > numbers.length ) {
-      clearInterval( interval )
+      clearInterval( sortAnimationInterval )
     }
 
   }, 0 )
