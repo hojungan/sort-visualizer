@@ -4,6 +4,8 @@ const buttons = document.querySelectorAll( '.btn' )
 let bars = document.querySelectorAll( ".bar" )
 let sortAnimationInterval
 
+const ARR_SIZE = 300
+
 // Disables all sort buttons
 function disableBtns () {
   buttons.forEach( btn => btn.disabled = true )
@@ -17,7 +19,7 @@ function resetBtns () {
 // recreate and re-draw bars
 function resetArray () {
   clearInterval( sortAnimationInterval )
-  for ( let i = 0; i < 320; i++ ) {
+  for ( let i = 0; i < ARR_SIZE; i++ ) {
     numbers[i] = Math.floor( Math.random() * ( 800 - 10 ) + 10 )
   }
   drawBars( numbers, box )
@@ -40,6 +42,59 @@ resetArray()
 /*================================================================================================*/
 
 /* SORTING ALGORITHM ANIMATIONS */
+
+// Selection Sort
+function selectionSort ( arr, animate ) {
+  let minvalIndx
+  for ( let i = 0; i < arr.length - 1; i++ ) {
+    minValIndx = i
+
+    for ( let j = i + 1; j < arr.length; j++ ) {
+      if ( arr[j] < arr[minValIndx] ) {
+        minValIndx = j
+      }
+    }
+
+    // push indexs of elements to change to animate array
+    animate.push( [[i, arr[i]], [minValIndx, arr[minValIndx]]] )
+
+    if ( minValIndx !== i ) {
+      let temp = arr[i]
+      arr[i] = arr[minValIndx]
+      arr[minValIndx] = temp
+    }
+  }
+  console.log( arr )
+  console.log( animate )
+}
+
+function runSelection () {
+  let animate = []
+  selectionSort( numbers, animate )
+
+  for ( let i = 0; i < animate.length; i++ ) {
+    let [barOneIdx, barOneValue] = animate[i][0]
+    let [barTwoIdx, barTwoValue] = animate[i][1]
+
+    let barOne = bars[barOneIdx]
+    let barTwo = bars[barTwoIdx]
+
+    setTimeout( () => {
+      barOne.style.background = 'orange'
+      barTwo.style.background = 'crimson'
+    }, i * 50 )
+
+    setTimeout( () => {
+      barOne.style.height = `${barTwoValue}px`
+      barTwo.style.height = `${barOneValue}px`
+      barOne.style.background = 'pink'
+      barTwo.style.background = 'pink'
+    }, ( i + 1 ) * 50 )
+  }
+
+}
+
+
 
 // Insertion Sort
 function insertionSort ( arr, animations ) {
@@ -69,8 +124,6 @@ function runInsertion () {
   disableBtns()
   let animations = []
   insertionSort( numbers, animations )
-
-  console.log( animations )
 
   // animate
   let indx = 0
