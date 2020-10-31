@@ -16,8 +16,12 @@ function resetBtns () {
   buttons.forEach( btn => btn.hasAttribute( 'id' ) ? btn.disabled = false : btn.disabled = true )
 }
 
-// recreate and re-draw bars
-function resetArray () {
+function refreshPage () {
+  location.reload()
+}
+
+// initialize
+function init () {
   clearInterval( sortAnimationInterval )
   for ( let i = 0; i < ARR_SIZE; i++ ) {
     numbers[i] = Math.floor( Math.random() * ( 800 - 10 ) + 10 )
@@ -37,7 +41,7 @@ function drawBars ( array, box ) {
   bars = document.querySelectorAll( ".bar" )
 }
 
-resetArray()
+init()
 
 /*================================================================================================*/
 
@@ -220,7 +224,7 @@ function runMergeSort () {
       const [barOneIdx, barTwoIdx] = animations[i];
       const barOneStyle = bars[barOneIdx].style;
       const barTwoStyle = bars[barTwoIdx].style;
-      const color = i % 3 === 0 ? 'crimson' : 'green';
+      const color = i % 3 === 0 ? 'crimson' : 'pink';
       setTimeout( () => {
         barOneStyle.backgroundColor = color;
         barTwoStyle.backgroundColor = color;
@@ -236,47 +240,49 @@ function runMergeSort () {
 }
 
 // Bubble Sort
+function bubbleSort ( arr, animate ) {
+  for ( let i = 0; i < arr.length - 1; i++ ) {
+    for ( let j = i + 1; j < arr.length; j++ ) {
+      let leftValue = arr[i]
+      let rightValue = arr[j]
+
+      if ( leftValue > rightValue ) {
+        animate.push( [[i, leftValue], [j, rightValue]] )
+
+        let temp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = temp
+      }
+    }
+  }
+}
+
+
 function runBubble () {
   let pt1 = 0, pt2 = 0
 
   disableBtns()
 
-  sortAnimationInterval = setInterval( () => {
-    console.log( 'interval started' )
-    if ( pt1 <= numbers.length ) {
-      if ( pt2 <= numbers.length - pt1 - 1 ) {
-        if ( numbers[pt2] > numbers[pt2 + 1] ) {
-          let tmp = numbers[pt2]
-          numbers[pt2] = numbers[pt2 + 1]
-          numbers[pt2 + 1] = tmp
+  let animate = []
 
-          bars[pt2].style.height = `${numbers[pt2]}px`
-          bars[pt2 + 1].style.height = `${numbers[pt2 + 1]}px`
+  bubbleSort( numbers, animate )
 
-          // bars[pt2].style.background = "pink"
-          bars[pt2 + 1].style.background = "yellow"
+  for ( let i = 0; i < animate.length; i++ ) {
+    let [barOneIdx, barOneValue] = animate[i][0]
+    let [barTwoIdx, barTwoValue] = animate[i][1]
+    let barOne = bars[barOneIdx]
+    let barTwo = bars[barTwoIdx]
 
+    setTimeout( () => {
+      barOne.style.background = 'orange'
+      barTwo.style.background = 'crimson'
+    }, i * 1 )
 
-          if ( pt2 == numbers.length - pt1 - 1 ) {
-            bars[pt2].style.background = "green"
-          }
-        }
-
-        if ( pt2 == numbers.length - pt1 - 1 ) {
-          bars[pt2].style.background = "green"
-        } else {
-          bars[pt2].style.background = "pink"
-        }
-        ++pt2
-      } else {
-        pt2 = 0
-        ++pt1
-      }
-    }
-
-    if ( pt1 > numbers.length ) {
-      clearInterval( sortAnimationInterval )
-    }
-
-  }, 0 )
+    setTimeout( () => {
+      barOne.style.height = `${barTwoValue}px`
+      barTwo.style.height = `${barOneValue}px`
+      barOne.style.background = 'pink'
+      barTwo.style.background = 'pink'
+    }, ( i + 1 ) * 1 )
+  }
 }
