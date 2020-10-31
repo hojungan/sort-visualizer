@@ -69,6 +69,7 @@ function selectionSort ( arr, animate ) {
 }
 
 function runSelection () {
+  disableBtns()
   let animate = []
   selectionSort( numbers, animate )
 
