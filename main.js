@@ -4,7 +4,7 @@ const buttons = document.querySelectorAll( '.btn' )
 let bars = document.querySelectorAll( ".bar" )
 let sortAnimationInterval
 
-const ARR_SIZE = 300
+const ARR_SIZE = 250
 
 // Disables all sort buttons
 function disableBtns () {
@@ -21,10 +21,11 @@ function refreshPage () {
 }
 
 // initialize
+// generate random even number: https://stackoverflow.com/questions/10122417/javascript-showing-even-numbers-only/10122497
 function init () {
   clearInterval( sortAnimationInterval )
   for ( let i = 0; i < ARR_SIZE; i++ ) {
-    numbers[i] = Math.floor( Math.random() * ( 800 - 10 ) + 10 )
+    numbers[i] = Math.floor( Math.random() * ( 400 - 20 ) + 20 / 2 ) * 2;
   }
   drawBars( numbers, box )
   resetBtns()
@@ -109,11 +110,7 @@ function insertionSort ( arr, animations ) {
 
     // go backwards until j is higher than j-1
     while ( j > 0 && arr[j] <= arr[j - 1] ) {
-      // push two elements being swapped [index, j-1], [index, j]
-      // push to change color
-      animations.push( [[j - 1, arr[j - 1]], [j, arr[j]]] )
-
-      // push again to revert the color
+      // push two elements being swapped [[leftIndex, leftValue], [rightIndex, rightValue]]
       animations.push( [[j - 1, arr[j - 1]], [j, arr[j]]] )
 
       // swap j and j-1
@@ -130,37 +127,36 @@ function runInsertion () {
   let animations = []
   insertionSort( numbers, animations )
 
+  const animateSpeed = 20
+
   // animate
-  let indx = 0
-  sortAnimationInterval = setInterval( () => {
-    let [currentIndex, currentValue] = animations[indx][1]
-    let [previousIndex, previousValue] = animations[indx][0]
+  for ( let i = 0; i < animations.length; i++ ) {
+    let [barOneIdx, barOneValue] = animations[i][0]
+    let [barTwoIdx, barTwoValue] = animations[i][1]
+    let barOne = bars[barOneIdx]
+    let barTwo = bars[barTwoIdx]
 
-    // we change the color of the bar
-    let doChangeColor = indx % 2 === 0
+    setTimeout( () => {
+      // barOne.style.background = 'orange'
+      barTwo.style.background = 'crimson'
+    }, i * animateSpeed )
 
-    if ( doChangeColor ) {
-      setTimeout( () => {
-        bars[currentIndex].style.background = 'crimson'
-      } )
-    } else {
-      bars[currentIndex].style.height = `${previousValue}px`
-      bars[previousIndex].style.height = `${currentValue}px`
+    setTimeout( () => {
 
-      setTimeout( () => {
-        bars[currentIndex].style.background = 'pink'
-        bars[previousIndex].style.background = 'pink'
-      } )
-    }
+      barOne.style.height = `${barTwoValue}px`
+      barTwo.style.height = `${barOneValue}px`
 
-    ++indx
+      barOne.style.background = "green"
+      barTwo.style.background = "pink"
 
-    if ( indx === animations.length ) {
-      clearInterval( sortAnimationInterval )
-    }
 
-  } )
+    }, ( i + 1 ) * animateSpeed )
 
+    setTimeout( () => {
+      barOne.style.background = 'pink'
+      // barTwo.style.background = 'pink'
+    }, ( i + 2 ) * animateSpeed )
+  }
 }
 
 
@@ -239,24 +235,24 @@ function runMergeSort () {
   }
 }
 
+
 // Bubble Sort
 function bubbleSort ( arr, animate ) {
-  for ( let i = 0; i < arr.length - 1; i++ ) {
-    for ( let j = i + 1; j < arr.length; j++ ) {
-      let leftValue = arr[i]
-      let rightValue = arr[j]
+  for ( let i = 0; i < arr.length; i++ ) {
+    for ( let j = 0; j < arr.length; j++ ) {
+      let leftValue = arr[j]
+      let rightValue = arr[j + 1]
 
       if ( leftValue > rightValue ) {
-        animate.push( [[i, leftValue], [j, rightValue]] )
+        animate.push( [[j, leftValue], [j + 1, rightValue]] )
 
-        let temp = arr[i]
-        arr[i] = arr[j]
-        arr[j] = temp
+        let temp = arr[j]
+        arr[j] = arr[j + 1]
+        arr[j + 1] = temp
       }
     }
   }
 }
-
 
 function runBubble () {
   let pt1 = 0, pt2 = 0
@@ -267,6 +263,8 @@ function runBubble () {
 
   bubbleSort( numbers, animate )
 
+  console.log( numbers )
+
   for ( let i = 0; i < animate.length; i++ ) {
     let [barOneIdx, barOneValue] = animate[i][0]
     let [barTwoIdx, barTwoValue] = animate[i][1]
@@ -276,13 +274,13 @@ function runBubble () {
     setTimeout( () => {
       barOne.style.background = 'orange'
       barTwo.style.background = 'crimson'
-    }, i * 1 )
+    }, i * 30 )
 
     setTimeout( () => {
       barOne.style.height = `${barTwoValue}px`
       barTwo.style.height = `${barOneValue}px`
       barOne.style.background = 'pink'
       barTwo.style.background = 'pink'
-    }, ( i + 1 ) * 1 )
+    }, ( i + 1 ) * 30 )
   }
 }
