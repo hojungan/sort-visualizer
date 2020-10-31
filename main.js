@@ -41,8 +41,8 @@ resetArray()
 
 /* SORTING ALGORITHM ANIMATIONS */
 
-// Selection Sort
-function selectionSort ( arr, animations ) {
+// Insertion Sort
+function insertionSort ( arr, animations ) {
   // loop through the array
   for ( let i = 0; i < arr.length; i++ ) {
     let j = i + 1
@@ -65,10 +65,10 @@ function selectionSort ( arr, animations ) {
   }
 }
 
-function runSelection () {
+function runInsertion () {
   disableBtns()
   let animations = []
-  selectionSort( numbers, animations )
+  insertionSort( numbers, animations )
 
   console.log( animations )
 
@@ -84,14 +84,10 @@ function runSelection () {
     if ( doChangeColor ) {
       setTimeout( () => {
         bars[currentIndex].style.background = 'crimson'
-        // bars[previousIndex].style.background = 'orange'
       } )
     } else {
       bars[currentIndex].style.height = `${previousValue}px`
       bars[previousIndex].style.height = `${currentValue}px`
-
-      // bars[currentIndex].style.background = 'orange'
-      // bars[previousIndex].style.background = 'green'
 
       setTimeout( () => {
         bars[currentIndex].style.background = 'pink'
@@ -111,8 +107,7 @@ function runSelection () {
 
 
 
-// Merge Sort
-// https://github.com/clementmihailescu/Sorting-Visualizer-Tutorial
+// Merge Sort - https://github.com/clementmihailescu/Sorting-Visualizer-Tutorial
 function merge ( mainArray, left, right, middle, auxArray, animations ) {
 
   let i = left
