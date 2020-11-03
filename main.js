@@ -171,14 +171,14 @@ function runSelection () {
     setTimeout( () => {
       barOne.style.background = 'orange'
       barTwo.style.background = 'crimson'
-    }, i * animateSpeed )
+    }, i * animateSpeed * 10 )
 
     setTimeout( () => {
       barOne.style.height = `${barTwoValue}px`
       barTwo.style.height = `${barOneValue}px`
       barOne.style.background = 'white'
       barTwo.style.background = 'white'
-    }, ( i + 1 ) * animateSpeed )
+    }, ( i + 1 ) * animateSpeed * 10 )
   }
 
 }
