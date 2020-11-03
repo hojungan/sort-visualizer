@@ -4,7 +4,7 @@ const buttons = document.querySelectorAll( '.btn' )
 let bars = document.querySelectorAll( ".bar" )
 let sortAnimationInterval
 
-const ARR_SIZE = 500
+const ARR_SIZE = 400
 const animateSpeed = 1
 
 // Disables all sort buttons
