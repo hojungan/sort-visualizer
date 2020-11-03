@@ -4,7 +4,8 @@ const buttons = document.querySelectorAll( '.btn' )
 let bars = document.querySelectorAll( ".bar" )
 let sortAnimationInterval
 
-const ARR_SIZE = 250
+const ARR_SIZE = 500
+const animateSpeed = 1
 
 // Disables all sort buttons
 function disableBtns () {
@@ -48,6 +49,88 @@ init()
 
 /* SORTING ALGORITHM ANIMATIONS */
 
+// Radix Sort
+function radixSort ( array, animate ) {
+  let count = new Array( 10 )
+  count.fill( 0 )
+  let output = []
+
+  // used to get nth digit of the number
+  // 0 for 1s, 1 for 10s, and 2 for 100s...
+  let nthDigit = 0
+
+  // find the largest value
+  let maxVal = -1
+  for ( let i = 0; i < array.length; i++ ) {
+    if ( array[i] > maxVal ) maxVal = array[i]
+  }
+
+  let digitLength = maxVal.toString().length
+
+  // loop for the length of digitLength+1
+  for ( let i = 0; i < digitLength; i++ ) {
+    // clear count array and output array
+    count.fill( 0 )
+    output = []
+
+    // loop for the length of array.length
+    for ( let j = 0; j < array.length; j++ ) {
+      // get nth digit of the array[j]
+      let digit = Math.floor( ( array[j] / Math.pow( 10, nthDigit ) ) % 10 )
+
+      // increase by 1 at count[digit]
+      count[digit] += 1
+    }
+
+    // create running sum of count
+    for ( let l = 1; l < count.length; l++ ) {
+      count[l] += count[l - 1]
+    }
+
+    // fill output array
+    // traverse the array backwards
+    for ( let k = array.length - 1; k >= 0; k-- ) {
+      // get nth digit of the array[k]
+      let digit = Math.floor( ( array[k] / Math.pow( 10, nthDigit ) ) % 10 )
+
+      // get index from count array using digit
+      let index = count[digit]
+
+      count[digit] -= 1
+
+      output[index - 1] = array[k]
+    }
+    animate.push( ...output )
+
+    // increase nthDigit by 1
+    ++nthDigit
+
+    // copy output array to array
+    array = output
+  }
+}
+
+function runRadixSort () {
+  let animate = []
+  radixSort( numbers, animate )
+
+  console.log( animate )
+
+  let colours = ['orange', 'crimson', 'white']
+  let colourIdx = 0
+
+  for ( let i = 0; i < animate.length; i++ ) {
+    setTimeout( () => {
+      if ( i % ARR_SIZE === 0 ) {
+        colourIdx = i / ARR_SIZE
+      }
+      bars[i % bars.length].style.background = colours[colourIdx]
+      bars[i % bars.length].style.height = `${animate[i]}px`
+    }, i * 1 )
+  }
+
+}
+
 // Selection Sort
 function selectionSort ( arr, animate ) {
   let minvalIndx
@@ -88,14 +171,14 @@ function runSelection () {
     setTimeout( () => {
       barOne.style.background = 'orange'
       barTwo.style.background = 'crimson'
-    }, i * 50 )
+    }, i * animateSpeed )
 
     setTimeout( () => {
       barOne.style.height = `${barTwoValue}px`
       barTwo.style.height = `${barOneValue}px`
-      barOne.style.background = 'pink'
-      barTwo.style.background = 'pink'
-    }, ( i + 1 ) * 50 )
+      barOne.style.background = 'white'
+      barTwo.style.background = 'white'
+    }, ( i + 1 ) * animateSpeed )
   }
 
 }
@@ -127,7 +210,6 @@ function runInsertion () {
   let animations = []
   insertionSort( numbers, animations )
 
-  const animateSpeed = 20
 
   // animate
   for ( let i = 0; i < animations.length; i++ ) {
@@ -147,14 +229,14 @@ function runInsertion () {
       barTwo.style.height = `${barOneValue}px`
 
       barOne.style.background = "green"
-      barTwo.style.background = "pink"
+      barTwo.style.background = "white"
 
 
     }, ( i + 1 ) * animateSpeed )
 
     setTimeout( () => {
-      barOne.style.background = 'pink'
-      // barTwo.style.background = 'pink'
+      barOne.style.background = 'white'
+      // barTwo.style.background = 'white'
     }, ( i + 2 ) * animateSpeed )
   }
 }
@@ -220,7 +302,7 @@ function runMergeSort () {
       const [barOneIdx, barTwoIdx] = animations[i];
       const barOneStyle = bars[barOneIdx].style;
       const barTwoStyle = bars[barTwoIdx].style;
-      const color = i % 3 === 0 ? 'crimson' : 'pink';
+      const color = i % 3 === 0 ? 'crimson' : 'white';
       setTimeout( () => {
         barOneStyle.backgroundColor = color;
         barTwoStyle.backgroundColor = color;
@@ -274,13 +356,13 @@ function runBubble () {
     setTimeout( () => {
       barOne.style.background = 'orange'
       barTwo.style.background = 'crimson'
-    }, i * 30 )
+    }, i * animateSpeed )
 
     setTimeout( () => {
       barOne.style.height = `${barTwoValue}px`
       barTwo.style.height = `${barOneValue}px`
-      barOne.style.background = 'pink'
-      barTwo.style.background = 'pink'
-    }, ( i + 1 ) * 30 )
+      barOne.style.background = 'white'
+      barTwo.style.background = 'white'
+    }, ( i + 1 ) * animateSpeed )
   }
 }
