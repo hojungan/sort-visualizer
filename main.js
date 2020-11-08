@@ -95,8 +95,6 @@ function runQuickSort () {
   let animate = []
   quickSort( numbers, 0, numbers.length - 1, animate )
 
-  console.log( animate )
-
   let indx = undefined
   let prevInd = undefined
   for ( let i = 0; i < animate.length; i++ ) {
@@ -119,7 +117,6 @@ function runQuickSort () {
       }
 
       if ( i === animate.length - 1 ) {
-        console.log( indx )
         bars[indx].style.background = 'white'
       }
     }, i * animateSpeed )
@@ -191,8 +188,6 @@ function runRadixSort () {
   let animate = []
   radixSort( numbers, animate )
 
-  console.log( animate )
-
   let colours = ['orange', 'crimson', 'white']
   let colourIdx = 0
 
@@ -229,8 +224,6 @@ function selectionSort ( arr, animate ) {
       arr[minValIndx] = temp
     }
   }
-  console.log( arr )
-  console.log( animate )
 }
 
 function runSelection () {
@@ -421,8 +414,6 @@ function runBubble () {
   let animate = []
 
   bubbleSort( numbers, animate )
-
-  console.log( numbers )
 
   for ( let i = 0; i < animate.length; i++ ) {
     let [barOneIdx, barOneValue] = animate[i][0]
