@@ -4,8 +4,11 @@ const buttons = document.querySelectorAll( '.btn' )
 let bars = document.querySelectorAll( ".bar" )
 let sortAnimationInterval
 
-const ARR_SIZE = 400
+const ARR_SIZE = 300
 const animateSpeed = 1
+const MAX_SIZE = 400
+const MIN_SIZE = 20
+box.style.height = `${MAX_SIZE * 2}px`
 
 // Disables all sort buttons
 function disableBtns () {
@@ -26,7 +29,7 @@ function refreshPage () {
 function init () {
   clearInterval( sortAnimationInterval )
   for ( let i = 0; i < ARR_SIZE; i++ ) {
-    numbers[i] = Math.floor( Math.random() * ( 400 - 20 ) + 20 / 2 ) * 2;
+    numbers[i] = Math.floor( Math.random() * ( MAX_SIZE - MIN_SIZE ) + MIN_SIZE / 2 ) * 2;
   }
   drawBars( numbers, box )
   resetBtns()
@@ -48,6 +51,80 @@ init()
 /*================================================================================================*/
 
 /* SORTING ALGORITHM ANIMATIONS */
+
+// Quick Sort
+function quickSort ( array, left, right, animate ) {
+  if ( left >= right ) { return }
+
+  let pivot = partition( array, left, right, animate )
+  quickSort( array, left, pivot - 1, animate )
+  quickSort( array, pivot + 1, right, animate )
+}
+
+function partition ( array, left, right, animate ) {
+  let pivot = array[right]
+
+  // add index of pivot to animate array
+  animate.push( [right] )
+
+  let i = left - 1
+  for ( let j = left; j < right; j++ ) {
+    if ( array[j] < pivot ) {
+      i++
+
+      // push swapped elements to animate array
+      animate.push( [[i, array[i]], [j, array[j]]] )
+
+      let temp = array[j]
+      array[j] = array[i]
+      array[i] = temp
+    }
+  }
+
+  // push pivot swap to animate array
+  animate.push( [[i + 1, array[i + 1]], [right, array[right]]] )
+
+  let temp = array[right]
+  array[right] = array[i + 1]
+  array[i + 1] = temp
+
+  return i + 1
+}
+
+function runQuickSort () {
+  let animate = []
+  quickSort( numbers, 0, numbers.length - 1, animate )
+
+  console.log( animate )
+
+  let indx = undefined
+  let prevInd = undefined
+  for ( let i = 0; i < animate.length; i++ ) {
+    setTimeout( () => {
+      if ( animate[i].length === 1 ) {
+        prevInd = indx
+        indx = animate[i][0]
+        prevInd != undefined ? bars[prevInd].style.background = 'white' : ''
+        bars[indx].style.background = 'red'
+
+
+
+      } else {
+        let [leftIndex, leftValue] = animate[i][0]
+        let [rightIndex, rightValue] = animate[i][1]
+
+        bars[leftIndex].style.height = `${rightValue}px`
+        bars[rightIndex].style.height = `${leftValue}px`
+
+      }
+
+      if ( i === animate.length - 1 ) {
+        console.log( indx )
+        bars[indx].style.background = 'white'
+      }
+    }, i * animateSpeed )
+  }
+}
 
 // Radix Sort
 function radixSort ( array, animate ) {
