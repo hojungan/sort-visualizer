@@ -67,3 +67,15 @@ body {
   font-weight: bolder;
   font-size: 2rem;
 }
+
+@media (max-width: 800px) {
+  .controls {
+    flex-wrap: wrap;
+  }
+
+  .controls button {
+    flex: 1 auto;
+    margin: 4px;
+    padding: 10px 3px;
+  }
+}
